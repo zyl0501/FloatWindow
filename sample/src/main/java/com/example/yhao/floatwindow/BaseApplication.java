@@ -2,6 +2,8 @@ package com.example.yhao.floatwindow;
 
 import android.app.Application;
 import android.os.Build;
+import android.view.View;
+import android.view.ViewGroup;
 import android.view.animation.BounceInterpolator;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -22,14 +24,14 @@ public class BaseApplication extends Application {
     public void onCreate() {
         super.onCreate();
 
-        ImageView imageView = new ImageView(getApplicationContext());
-        imageView.setImageResource(R.drawable.icon);
+//        ImageView imageView = new ImageView(getApplicationContext());
+//        imageView.setImageResource(R.drawable.icon);
 
 
         //效果图1
         FloatWindow
                 .with(getApplicationContext())
-                .setView(imageView)
+                .setView(R.layout.pop_layout)
                 .setWidth(Screen.width,0.2f)
                 .setHeight(Screen.width,0.2f)
                 .setX(Screen.width,0.8f)
@@ -38,6 +40,19 @@ public class BaseApplication extends Application {
                 .setMoveStyle(500,new BounceInterpolator())
                 .setDesktopShow(true)
                 .build();
+        ImageView imageView = ((ViewGroup) FloatWindow.get().getView()).findViewById(R.id.icon);
+        imageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(BaseApplication.this, "aaaaa", Toast.LENGTH_SHORT).show();
+            }
+        });
+        FloatWindow.get().getView().setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(BaseApplication.this, "bbbbb", Toast.LENGTH_SHORT).show();
+            }
+        });
 
         ImageView imageView2 = new ImageView(getApplicationContext());
         imageView2.setImageResource(R.mipmap.ic_launcher_round);

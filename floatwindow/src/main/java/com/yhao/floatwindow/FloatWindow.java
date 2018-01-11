@@ -69,7 +69,7 @@ public class FloatWindow {
         long mDuration = 300;
         TimeInterpolator mInterpolator;
         private String mTag = mDefaultTag;
-         boolean mDesktopShow;
+        boolean mDesktopShow;
 
         private B() {
 
@@ -187,6 +187,9 @@ public class FloatWindow {
             if (mView == null) {
                 mView = Util.inflate(mApplicationContext, mLayoutId);
             }
+            FloatDragLayout dragLayout = new FloatDragLayout(mView.getContext());
+            dragLayout.addView(mView);
+            this.mView = dragLayout;
             IFloatWindow floatWindowImpl = new IFloatWindowImpl(this);
             mFloatWindowMap.put(mTag, floatWindowImpl);
         }

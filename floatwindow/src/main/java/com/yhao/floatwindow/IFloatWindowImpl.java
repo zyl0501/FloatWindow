@@ -7,8 +7,11 @@ import android.animation.PropertyValuesHolder;
 import android.animation.TimeInterpolator;
 import android.animation.ValueAnimator;
 import android.os.Build;
+import android.support.v4.widget.ViewDragHelper;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewConfiguration;
+import android.view.ViewGroup;
 import android.view.animation.DecelerateInterpolator;
 
 /**
@@ -154,27 +157,24 @@ public class IFloatWindowImpl extends IFloatWindow {
             case MoveType.inactive:
                 break;
             default:
-                getView().setOnTouchListener(new View.OnTouchListener() {
-                    float lastX, lastY, changeX, changeY;
-                    int newX, newY;
+                FloatDragLayout root = (FloatDragLayout) getView();
+                root.setDragListener(new FloatDragLayout.DragListener() {
+                    @Override
+                    public void onDrag(float deltaX, float deltaY) {
+                        mFloatView.updateXY((int) (mFloatView.getX() + deltaX), (int) (mFloatView.getY() + deltaY));
+                    }
+                });
+                root.setOnTouchListener(new View.OnTouchListener() {
 
                     @Override
                     public boolean onTouch(View v, MotionEvent event) {
-
                         switch (event.getAction()) {
+                            default:
+                                break;
                             case MotionEvent.ACTION_DOWN:
-                                lastX = event.getRawX();
-                                lastY = event.getRawY();
                                 cancelAnimator();
                                 break;
                             case MotionEvent.ACTION_MOVE:
-                                changeX = event.getRawX() - lastX;
-                                changeY = event.getRawY() - lastY;
-                                newX = (int) (mFloatView.getX() + changeX);
-                                newY = (int) (mFloatView.getY() + changeY);
-                                mFloatView.updateXY(newX, newY);
-                                lastX = event.getRawX();
-                                lastY = event.getRawY();
                                 break;
                             case MotionEvent.ACTION_UP:
                                 switch (mB.mMoveType) {
@@ -207,9 +207,11 @@ public class IFloatWindowImpl extends IFloatWindow {
                                         });
                                         startAnimator();
                                         break;
+                                    default:
+                                        break;
                                 }
+                            case MotionEvent.ACTION_CANCEL:
                                 break;
-
                         }
                         return false;
                     }

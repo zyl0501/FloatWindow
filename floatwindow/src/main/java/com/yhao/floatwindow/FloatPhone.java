@@ -114,7 +114,6 @@ class FloatPhone extends FloatView {
     void updateX(int x) {
         mLayoutParams.x = mX = x;
         mWindowManager.updateViewLayout(mView, mLayoutParams);
-
     }
 
     @Override
